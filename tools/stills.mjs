@@ -8,9 +8,10 @@ import path from 'node:path';
 const [id, outDir, list, flag] = process.argv.slice(2);
 const props = {guides: flag === '--guides'};
 const browserExecutable = '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell';
+const cloud = fs.existsSync(browserExecutable); // no GPU there: software WebGL
 const opts = {
-  browserExecutable: fs.existsSync(browserExecutable) ? browserExecutable : null,
-  chromiumOptions: {gl: 'swangle'},
+  browserExecutable: cloud ? browserExecutable : null,
+  chromiumOptions: {gl: cloud ? 'swangle' : 'angle'},
 };
 fs.mkdirSync(outDir, {recursive: true});
 const serveUrl = await bundle({entryPoint: path.resolve('src/index.ts')});
