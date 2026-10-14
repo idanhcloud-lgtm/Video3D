@@ -5,11 +5,28 @@
 - **Blender (Cycles)** renders photoreal shots as PNG frame sequences.
 - **Remotion** composites those frames with titles, subtitles and audio, and also renders real-time 3D scenes with three.js.
 
+## Videos
+
+| Composition | Format | Content |
+|---|---|---|
+| `EngineTikTok` | 1080×1920, 30 fps | Four-stroke engine explainer built up from an iron bucket, Vietnamese voice-over (`public/voice/engine.mp3`) |
+| `Warehouse3D` | 1920×1080, 60 fps | three.js warehouse demo |
+| `BlenderShot` | 1920×1080, 60 fps | Blender Cycles frame sequence with overlays |
+
+### EngineTikTok
+
+- Render: `npx remotion render EngineTikTok out/dong-co-dot-trong-tiktok.mp4`
+- Layout check with the TikTok UI zones drawn on top: `npx remotion still EngineTikTok out/check.png --frame=600 --props='{"guides":true}'`
+- Safe zones (`src/engine/camera.ts`): top 230 px (tabs, search) and bottom 470 px (caption, description, music) stay free of important content; the engine, labels and subtitles sit between them.
+- Timing: `tools/align_voice.py` aligns the subtitle phrases to the voice by counting syllable peaks in the loudness envelope (one peak per Vietnamese word) and writes `src/data/engineVoice.json` with phrase and word times. Every animation beat is keyed to a phrase id, so after replacing the voice file just run `.venv/bin/python tools/align_voice.py` again.
+- Code: `src/engine/timeline.ts` (phrase times, crank angle schedule, geometry), `state.ts` (what every part does at time t), `Parts.tsx` / `EngineScene.tsx` (3D), `Overlay.tsx` (subtitles, part labels, stroke bar, titles), `camera.ts` (camera path, safe zones).
+- `node tools/stills.mjs EngineTikTok <dir> 1.5,20,60 --guides` renders several check frames with one bundle.
+
 ## Setup
 
 ```bash
 npm install
-python3 -m venv .venv && .venv/bin/pip install -r blender/requirements.txt
+python3 -m venv .venv && .venv/bin/pip install -r blender/requirements.txt -r tools/requirements.txt
 ```
 
 In Claude Code cloud sessions, `.claude/hooks/session-start.sh` runs these steps automatically.
