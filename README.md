@@ -12,6 +12,7 @@
 | `EngineTikTok` | 1080×1920, 30 fps | Four-stroke engine explainer built up from an iron bucket, Vietnamese voice-over (`public/voice/engine.mp3`) |
 | `Warehouse3D` | 1920×1080, 60 fps | three.js warehouse demo |
 | `BlenderShot` | 1920×1080, 60 fps | Blender Cycles frame sequence with overlays |
+| `BridgeShort` | 1080×1920, 30 fps | Sample short of the `cartoon-3d-short` skill (2D characters in a 3D world), no sound |
 
 ### EngineTikTok
 
@@ -21,6 +22,12 @@
 - Timing: `tools/align_voice.py` aligns the subtitle phrases to the voice by counting syllable peaks in the loudness envelope (one peak per Vietnamese word) and writes `src/data/engineVoice.json` with phrase and word times. Every animation beat is keyed to a phrase id, so after replacing the voice file just run `.venv/bin/python tools/align_voice.py` again.
 - Code: `src/engine/timeline.ts` (phrase times, crank angle schedule, geometry), `state.ts` (what every part does at time t), `Parts.tsx` / `EngineScene.tsx` (3D), `Overlay.tsx` (subtitles, part labels, stroke bar, titles), `camera.ts` (camera path, safe zones).
 - `node tools/stills.mjs EngineTikTok <dir> 1.5,20,60 --guides` renders several check frames with one bundle.
+
+### Cartoon 3D story shorts (`cartoon-3d-short` skill)
+
+- Skill: `.claude/skills/cartoon-3d-short/` from [mromidev/claude-animated-shorts](https://github.com/mromidev/claude-animated-shorts) (MIT). Read `PROJECT_NOTES.md` there first.
+- Sample short: `src/videos/bridge/`. Check frames with `node scripts/bridge-stills.mjs out/bridge/x_ 100,400 0.5`.
+- New shorts start as a copy of `src/videos/bridge/` in `src/videos/<name>/`.
 
 ## Setup
 

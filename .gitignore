@@ -6,3 +6,7 @@ __pycache__/
 public/audio/
 # Blender frame sequences are regenerated with `npm run blender`
 public/blender/*/
+# Style reference frames of the cartoon-3d-short skill: study material, never published (see the skill's SKILL.md).
+# The session-start hook downloads them in cloud sessions.
+.claude/skills/cartoon-3d-short/references/frames/
+.claude/skills/cartoon-3d-short/references/sheets/

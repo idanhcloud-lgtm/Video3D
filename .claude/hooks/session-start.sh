@@ -16,3 +16,14 @@ if [ ! -x .venv/bin/python ]; then
   python3 -m venv .venv
 fi
 .venv/bin/pip install -q -r blender/requirements.txt -r tools/requirements.txt
+
+# Style reference frames for the cartoon-3d-short skill (kept out of git). Optional: skip quietly on failure.
+REF=.claude/skills/cartoon-3d-short/references
+if [ ! -d "$REF/sheets" ]; then
+  TMP=$(mktemp -d)
+  if git clone -q --filter=blob:none https://github.com/mromidev/claude-animated-shorts.git "$TMP/s" 2>/dev/null \
+    && git -C "$TMP/s" checkout -q e3b817b 2>/dev/null; then
+    cp -r "$TMP/s/references/frames" "$TMP/s/references/sheets" "$REF/" || true
+  fi
+  rm -rf "$TMP"
+fi

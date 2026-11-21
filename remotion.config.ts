@@ -14,9 +14,20 @@ Config.setOverwriteOutput(true);
 // Cloud sessions: no GPU and no Chrome download. Reuse the preinstalled headless shell and run WebGL
 // (three.js) in software (ANGLE on SwiftShader). On a normal machine Remotion downloads its own Chrome
 // and uses the GPU through ANGLE, which renders the 3D scenes many times faster.
-const preinstalled =
-  '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell';
-if (fs.existsSync(preinstalled)) {
+// The Playwright build number in the folder name changes when the container image is updated.
+const findPreinstalled = (): string | undefined => {
+  const root = '/opt/pw-browsers';
+  if (!fs.existsSync(root)) return undefined;
+  for (const dir of fs.readdirSync(root).filter((d) => d.startsWith('chromium_headless_shell-')).sort().reverse()) {
+    for (const sub of ['chrome-headless-shell-linux64/chrome-headless-shell', 'chrome-linux/headless_shell']) {
+      const p = `${root}/${dir}/${sub}`;
+      if (fs.existsSync(p)) return p;
+    }
+  }
+  return undefined;
+};
+const preinstalled = findPreinstalled();
+if (preinstalled) {
   Config.setBrowserExecutable(preinstalled);
   Config.setChromiumOpenGlRenderer('swangle');
 } else {
